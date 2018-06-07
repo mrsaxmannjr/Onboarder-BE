@@ -1,12 +1,14 @@
-var express = require('express');
-var logger = require('morgan');
-var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
+const express = require('express');
+const logger = require('morgan');
+const cookieParser = require('cookie-parser');
+const bodyParser = require('body-parser');
 const cors = require('cors');
 
-var links = require('./routes/links');
+const queries = require("./db/queries");
 
-var app = express();
+const app = express();
+
+const glinks = require('./api/routes');
 
 app.use(logger('dev'));
 app.use(bodyParser.json());
@@ -20,8 +22,10 @@ app.get("/", (req, res) => {
   })
 })
 
+app.use("/api/v1/glinks", glinks);
+
 app.use((req, res, next) => {
-  var err = new Error('Not Found');
+  const err = new Error('Not Found');
   res.status(404);
   next(err);
 });
